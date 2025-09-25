@@ -31,3 +31,44 @@ jobs:
 
       - name: Run unit tests (order_service)
         run: docker compose exec -T order_service pytest tests --maxfail=1 --disable-warnings -q
+
+  integration_tests:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        python-version: [3.11, 3.12]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Build and run services
+        run: docker compose up -d
+
+      - name: Wait for kitchen_service
+        run: |
+          echo "Waiting for kitchen_service..."
+          while ! nc -z localhost 50051; do sleep 1; done
+
+      - name: Wait for order_service
+        run: |
+          echo "Waiting for order_service..."
+          while ! nc -z localhost 50052; do sleep 1; done
+
+      - name: Install integration test dependencies
+        run: pip install -r integration_test/requirements.txt
+
+      - name: Run integration tests
+        run: |
+          export KITCHEN_HOST=localhost
+          export KITCHEN_PORT=50051
+          export ORDER_HOST=localhost
+          export ORDER_PORT=50052
+          export PYTHONPATH=./generated:./services/kitchen_service/src:./services/kitchen_service/db
+          pytest integration_test --maxfail=1 --disable-warnings -q
