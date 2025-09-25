@@ -31,10 +31,8 @@ jobs:
       - name: Build and run services
         run: docker compose up --build -d
 
+      - name: Run unit tests (kitchen_service)
+        run: docker compose exec -T kitchen_service pytest tests --maxfail=1 --disable-warnings -q
 
-    - name: Run unit tests (kitchen_service)
-      run: docker compose exec -T kitchen_service pytest tests --maxfail=1 --disable-warnings -q
-
-    - name: Run unit tests (order_service)
-      run: docker compose exec -T order_service pytest tests --maxfail=1 --disable-warnings -q
-
+      - name: Run unit tests (order_service)
+        run: docker compose exec -T order_service pytest tests --maxfail=1 --disable-warnings -q
