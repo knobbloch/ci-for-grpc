@@ -4,12 +4,11 @@ from generated import order_pb2, order_pb2_grpc
 
 class OrderUpdateServiceServicer(order_pb2_grpc.OrderUpdateServiceServicer):
     def UpdateOrderStatus(self, request, context):
-        # Здесь можно добавить логику обновления заказа в БД
         print(f"Received update for order {request.order_id}, task {request.task_id}, status {request.status}")
         
         return order_pb2.UpdateOrderResponse(
             order_id=request.order_id,
-            status=request.status  # возвращаем тот же статус, который пришёл
+            status=request.status
         )
 
 def serve():

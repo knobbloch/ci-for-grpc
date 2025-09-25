@@ -44,5 +44,4 @@ class MockMongoDB:
         self.kitchen_tasks = MockCollection()
         self.cooks = MockCollection()
 
-# глобальный экземпляр для репозиториев и тестов
 db = MockMongoDB()
