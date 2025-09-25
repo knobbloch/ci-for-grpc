@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package order;
+
+message KitchenTaskStatus {
+    string order_id = 1;
+    string task_id = 2;
+    string dish_id = 3;
+    string status = 4;
+    string message = 5;
+}
+
+message UpdateOrderResponse {
+    string order_id = 1;
+    string status = 2;
+}
+
+service OrderUpdateService {
+    rpc UpdateOrderStatus(KitchenTaskStatus) returns (UpdateOrderResponse);
+}

@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  kitchen_service:
+    build:
+      context: ./services/kitchen_service
+      dockerfile: Dockerfile
+    volumes:
+      - ./proto:/app/proto
+      - ./generated:/app/generated
+    container_name: kitchen_service
+    ports:
+      - "50051:50051"
+    environment:
+      - PYTHONPATH=/app/generated:/app/src:/app/db:/app
+    networks:
+      - lab10_network
+
+  order_service:
+    build:
+      context: ./services/order_service
+      dockerfile: Dockerfile
+    volumes:
+      - ./proto:/app/proto
+      - ./generated:/app/generated
+    container_name: order_service
+    ports:
+      - "50052:50052"
+    depends_on:
+      - kitchen_service
+    environment:
+      - PYTHONPATH=/app/generated:/app/src:/app/db:/app
+      - KITCHEN_HOST=kitchen_service
+      - KITCHEN_PORT=50051
+    networks:
+      - lab10_network
+
+networks:
+  lab10_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16

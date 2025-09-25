@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package kitchen;
+
+message DishItem {
+    string dish_id = 1;
+    int32 quantity = 2;
+}
+
+message Order {
+    string order_id = 1;
+    repeated DishItem items = 2;
+    string delivery_address = 3;
+    string status = 4;
+}
+
+message CreateKitchenTasksResponse {
+    repeated string task_ids = 1;
+    string status = 2; 
+}
+
+service KitchenOrderService {
+    rpc CreateKitchenTasks(Order) returns (CreateKitchenTasksResponse);
+}
