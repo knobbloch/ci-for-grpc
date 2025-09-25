@@ -70,5 +70,5 @@ jobs:
           export KITCHEN_PORT=50051
           export ORDER_HOST=localhost
           export ORDER_PORT=50052
-          export PYTHONPATH=./generated:./services/kitchen_service/src:./services/kitchen_service/db
-          pytest integration_test --maxfail=1 --disable-warnings -q
+          python -m pytest integration_test --maxfail=1 --disable-warnings -q
+
